@@ -8,16 +8,9 @@ or as the ChatBoy himself would say:
 
 <br>
 
-#### Setup
+#### Install
 ```bash
 git clone ...
-```
-
-###### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
 ```
 
 ###### Backend
@@ -26,11 +19,26 @@ cd backend
 virtualenv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
-then add API_KEY to .env file
+create .env and API_KEY
 ```bash ad
 touch .env
 ```
+start with:
+```bash
+uvicorn main:app --reload
+```
+<br>
 
+###### Frontend
+```bash
+cd frontend
+npm install
+```
+start with:
+```bash
+npm run dev
+```
+<br>
 
 ## Previews
 
