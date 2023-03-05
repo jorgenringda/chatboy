@@ -8,49 +8,53 @@ import { BeatLoader } from 'react-spinners';
 import { v4 as uuidv4 } from 'uuid';
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import {materialDark} from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import remarkGfm from 'remark-gfm'
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+
+const CodeBlock = ({ language, children }) => (
+  <div className="w-full px-5">
+    <SyntaxHighlighter
+      style={vscDarkPlus}
+      language="jsx"
+      children={String(children).replace(/\n$/, "")}
+      customStyle={{
+        borderRadius: '4px',
+        padding: '10px',
+        fontSize: '1rem',
+        paddingLeft: '10px',
+      }}
+      wrapLongLines={true}
+    />
+  </div>
+);
 
 const TextWithMarkdownSupport = ({ msg }) => {
   return (
-    <ReactMarkdown
-	  remarkPlugins={[remarkGfm]}
-      components={{
-        code({ node, inline, className, children, ...props }) {
-          return !inline ? (
-			<div className="w-full px-5">
-				<SyntaxHighlighter
-				  style={materialDark}
-				  language="python"
-				  children={String(children).replace(/\n$/, "")}
-				  customStyle={{
-					borderRadius: '5px',
-					padding: '10px',
-					fontSize: '0.8rem',
-					paddingLeft: '10px',
-				  }}
-				  wrapLongLines={true}
-				  {...props}
-				/>
-			</div>
-          ) : (
-            <code className={className ? className : ""} {...props}>
-              {children}
-            </code>
-          );
-        }
-      }}
-    >
-      {msg}
-    </ReactMarkdown>
-  )
+    <article className="prose w-[100%] max-w-none pr-10 text-sm">
+       <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            code({ node, inline, className, children, ...props }) {
+              return !inline ? (
+                <CodeBlock language={props.className}>{children}</CodeBlock>
+              ) : (
+                <code className={className ? className : ""} {...props}>
+                  {children}
+                </code>
+              );
+            }
+          }}
+        >
+        {msg}
+        </ReactMarkdown>
+    </article>
+  );
 };
 
 const ChatWindow = tw.div`flex flex-col min-h-[90%] max-h-[90%]  bg-[#f1f5f9] focus:outline-none shadow-xl overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100`;
 
 const ChatMessage = ({ message, animationId, disableCopy}) => {
   const messageStyle = message.isUser ? 'bg-[#bfdbfe]' : 'bg-[#e2e8f0]';
-
   const [showCopyText, setShowCopyText] = useState(false);
 
   const handleCopyText = () => {
@@ -60,8 +64,8 @@ const ChatMessage = ({ message, animationId, disableCopy}) => {
   };
 
   return (
-    <div className="flex flex-col mt-1">
-      <div className={`whitespace-pre-line font-small pt-1 pl-2 text-left ${messageStyle}`}>
+    <div className="flex flex-col mt-1 ">
+      <div className={`font-small pt-1 pl-2 text-left ${messageStyle}`}>
         {message.isUser ? <FaUser className="inline-block text-gray-600" /> : <AiFillRobot className="inline-block text-grey-600" />}
         <button className="float-right focus:outline-none" onClick={handleCopyText} disabled={(animationId === message.messageId) && disableCopy}>
           <div className="flex items-center">
@@ -72,11 +76,11 @@ const ChatMessage = ({ message, animationId, disableCopy}) => {
           </div>
         </button>
       </div>
-      <div className={`whitespace-pre-line font-small pt-1 pb-4 pl-2 text-left ${messageStyle}`}>
+      <div className={`font-small w-full pt-1 pb-4 pl-2 text-sm text-left ${messageStyle}`}>
         <div className="h-0.5 bg-gray-400 w-full mb-1 opacity-5"></div>
         <div style={{ fontFamily: 'monospace' }} className={`font-medium text-left ${messageStyle}`}>
           {animationId === message.messageId ? (
-            <BeatLoader color={message.isUser ? '#4299E1' : '#718096'} loading={true} size={10} />
+            <BeatLoader color={'#718096'} loading={true} size={10} />
           ) : (
             <TextWithMarkdownSupport msg={message.text} />
           )}
