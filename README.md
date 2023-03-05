@@ -10,7 +10,7 @@ or as the ChatBoy himself would say:
 
 #### Install
 ```bash
-git clone ...
+git clone git@github.com:andreasoie/chatboy.git && cd chatboy
 ```
 
 ###### Backend
