@@ -49,7 +49,7 @@ npm run dev
 
 ###### 2) Understands all the nonsense you throw at it
 <p float="left">
-  <img src="docs/philosophy.png" width="100%"/>
+  <img src="docs/theory.png" width="100%"/>
 </p>
 
 ###### 3) Supports highlighting
