@@ -130,19 +130,16 @@ const ChatApp = () => {
   const handleSend = async () => {
     if (inputValue.trim() === '') return;
 
-
     const newMessage = { text: inputValue.trim(), messageId: uuidv4(), timestamp: Date.now(), isUser: true };
-    setMessages((prevState) => [...prevState, newMessage]);
+    const pcResponse = { text: null, messageId: uuidv4(), timestamp: Date.now(), isUser: false };
+    setMessages((prevState) => [...prevState, newMessage, pcResponse]);
+    setAnimationId(pcResponse.messageId);
     setInputValue('');
 
     try {
       setIsWaitingResponse(true);
-      const pcResponse = { text: null, messageId: uuidv4(), timestamp: Date.now(), isUser: false };
-      setMessages((prevState) => [...prevState, pcResponse]);
-      setAnimationId(pcResponse.messageId);
       const data = await postMessage(inputValue);
       setMessages((prevState) => prevState.map((message) => (message.messageId === pcResponse.messageId ? { ...message, text: data.response } : message)));
-
     } catch (error) {
       console.error(error);
     } finally {
@@ -187,3 +184,6 @@ const ChatApp = () => {
 };
 
 export default ChatApp;
+
+
+// My App is lagging when "messages" becomes big
