@@ -13,15 +13,6 @@ load_dotenv()
 openai.api_key = os.getenv("API_KEY")
 logging.basicConfig(filename='logs/chat.log', level=logging.INFO, format='%(asctime)s: %(message)s')
 
-class MaximumContentLengthExceeded(InvalidRequestError):
-    def __init__(self, max_length: int = 4096, message: str = "Input text length exceeds maximum allowed length."):
-        self.max_length = max_length
-        self.message = message
-        super().__init__(self.message)
-
-    def __str__(self):
-        return f"{self.message} Maximum allowed length: {self.max_length}."
-
 class ChatBoy:
     def __init__(self, system: str = "", user: str = "") -> None:
         self.system = system
@@ -36,7 +27,6 @@ class ChatBoy:
         if self.user:
             self.messages.append({"role": "user", "content": self.user})
         
-    
     def __call__(self, message):
         is_successfull, response = True, ""
         
@@ -66,8 +56,3 @@ class ChatBoy:
     def _process_reply(self, completion: dict) -> None:
         response = completion.choices[0].message.content
         return response.strip()
-    
-    
-# Refactor and apply best practices.
-
-
