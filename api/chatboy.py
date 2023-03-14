@@ -7,10 +7,11 @@ from typing import Any, Dict, List, Union
 import openai
 from dotenv import load_dotenv
 from openai import ChatCompletion
-from openai.error import APIError, InvalidRequestError
+from openai.error import APIError, InvalidRequestError, RateLimitError
 
 load_dotenv()
 openai.api_key = os.getenv("API_KEY")
+os.makedirs("logs", exist_ok=True)
 logging.basicConfig(filename='logs/chat.log', level=logging.INFO, format='%(asctime)s: %(message)s')
 
 class ChatBoy:
@@ -42,6 +43,9 @@ class ChatBoy:
         except APIError as ae:
             is_successfull = False
             response = json.dumps(ae.error)
+        except RateLimitError as rle:
+            is_successfull = False
+            response = json.dumps(rle.error)
             
         logging.info(f'Response: {response}')
         
