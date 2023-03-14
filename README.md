@@ -8,6 +8,11 @@ or as the ChatBoy himself would say:
 
 <br>
 
+#### Prerequisites
+- Python 3.8+
+- Node v19.7.0 (younger versions might be fine also)
+- NPM 9.5.0 (younger versions might be fine also)
+
 #### Install
 ```bash
 git clone git@github.com:andreasoie/chatboy.git && cd chatboy
