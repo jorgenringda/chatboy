@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-from logging.handlers import RotatingFileHandler
 from typing import Any, Dict, List, Union
 
 import openai
@@ -11,8 +10,22 @@ from openai.error import APIError, InvalidRequestError, RateLimitError
 
 load_dotenv()
 openai.api_key = os.getenv("API_KEY")
+
+def setup_logger(name: str, log_file: str, level=logging.INFO):
+    DEFAULT_FORMATTER = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    
+    handler = logging.FileHandler(log_file)        
+    handler.setFormatter(DEFAULT_FORMATTER)
+    
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+    
+    return logger
+
 os.makedirs("logs", exist_ok=True)
-logging.basicConfig(filename='logs/chat.log', level=logging.INFO, format='%(asctime)s: %(message)s')
+logchat = setup_logger('chat', 'logs/chat.log')
+logerror = setup_logger('error', 'logs/error.log')
 
 class ChatBoy:
     def __init__(self, system: str = "", user: str = "") -> None:
@@ -32,22 +45,25 @@ class ChatBoy:
         is_successfull, response = True, ""
         
         self.messages.append({"role": "user", "content": message})
+        logchat.info(f'Message: {message}')
         
-        logging.info(f'Message: {message}')
         try:
             response = self.process_messages()
         except InvalidRequestError as emcle:
+            logerror.exception('An exception occurred while processing messages: %s', emcle)
             is_successfull = False
-            self._reset_messages()
-            response = "INFO \n " + json.dumps(emcle.error) + "\n" + "Deleting all messages ..."
+            self._reset_messages() # Full message history => so reset
+            response = "INFO \n " + json.dumps(emcle.exception) + "\n" + "Deleting all messages ..."
         except APIError as ae:
+            logerror.exception('An exception occurred while processing messages: %s', ae)
             is_successfull = False
             response = json.dumps(ae.error)
         except RateLimitError as rle:
+            logerror.exception('An exception occurred while processing messages: %s', rle)
             is_successfull = False
             response = json.dumps(rle.error)
             
-        logging.info(f'Response: {response}')
+        logchat.info(f'Response: {response}')
         
         if is_successfull:
             self.messages.append({"role": "assistant", "content": response})
