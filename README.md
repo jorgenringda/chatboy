@@ -24,11 +24,8 @@ cd backend
 virtualenv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
-create .env and API_KEY
-```bash ad
-touch .env
-```
-start with:
+
+Add your `API_KEY` to an .env file, then start server with:
 ```bash
 uvicorn main:app --reload
 ```
