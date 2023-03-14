@@ -53,7 +53,7 @@ class ChatBoy:
             logerror.exception('An exception occurred while processing messages: %s', emcle)
             is_successfull = False
             self._reset_messages() # Full message history => so reset
-            response = "INFO \n " + json.dumps(emcle.exception) + "\n" + "Deleting all messages ..."
+            response = "INFO \n " + json.dumps(emcle.error) + "\n" + "Deleting all messages ..."
         except APIError as ae:
             logerror.exception('An exception occurred while processing messages: %s', ae)
             is_successfull = False
