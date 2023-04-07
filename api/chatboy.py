@@ -32,6 +32,7 @@ class ChatBoy:
         self.system = system
         self.user = user
         self.model = "gpt-3.5-turbo"
+        #self.model = "gpt-4-0314"
         self._reset_messages()
             
     def _reset_messages(self) -> None:

@@ -22,7 +22,7 @@ const App = () => {
           color: '#2d3748',
           textShadow: '2px 2px #cbd5e0'
           }}>
-          chatboy
+          Fittetryne
         </h1>
       </div>
       <ChatApp />
